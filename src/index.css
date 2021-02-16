@@ -48,3 +48,18 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+
+.history {
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.history:hover {
+  background-color: grey;
+  cursor: pointer;
+}
