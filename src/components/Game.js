@@ -1,7 +1,10 @@
 import React from "react";
 import Board from "./Board";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class Game extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,6 +18,7 @@ class Game extends React.Component {
     };
   }
   handleClick(i) {
+    
     const history = this.state.history.slice(0, this.state.stepNumber+1);
     const current = history[history.length-1];
     const squares = current.squares.slice();
@@ -22,15 +26,28 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
-    this.setState({
-      history: history.concat([
-        {
-          squares: squares,
-        },
-      ]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
-    });
+    const {dispatch} = this.props;
+    const { history, xIsNext, stepNumber } = i;
+    const action = {
+      type: 'NEXT_MOVE',
+      history : history.concat([
+            {
+              squares: squares,
+            },
+          ]),
+    }
+    dispatch(action);
+    this.setState({xIsNext: !this.state.xIsNext, stepNumber: history.length})
+    
+    // this.setState({
+    //   history: history.concat([
+    //     {
+    //       squares: squares,
+    //     },
+    //   ]),
+    //   stepNumber: history.length,
+    //   xIsNext: !this.state.xIsNext,
+    // });
   }
 
   jumpTo(step) {
@@ -96,4 +113,8 @@ function calculateWinner(squares) {
   }
   return null;
 }
+
+
+Game = connect()(Game);
+
 export default Game;
