@@ -1,6 +1,6 @@
 export default (state = {}, action) => {
 
-  const {history, xIsNext, stepNumber, squares} = action;
+  const {history, xIsNext, stepNumber, squares, historyStep} = action;
   
   switch (action.type) {
     case 'START_GAME':
@@ -19,6 +19,10 @@ export default (state = {}, action) => {
             stepNumber: history.length,
             xIsNext: !xIsNext,
       });
+    case 'PREVIOUS_STEP':
+      let state={...state};
+      return history.slice(0, stepNumber+1);
+   
     default:
     return state;
   }

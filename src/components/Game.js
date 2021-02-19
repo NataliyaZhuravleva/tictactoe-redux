@@ -19,15 +19,15 @@ class Game extends React.Component {
   }
   handleClick(i) {
     
-    const history = this.state.history.slice(0, this.state.stepNumber+1);
+    const history = this.props.history.slice(0, this.props.stepNumber+1);
     const current = history[history.length-1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
-    squares[i] = this.state.xIsNext ? "X" : "O";
+    squares[i] = this.props.xIsNext ? "X" : "O";
     const {dispatch} = this.props;
-    const { history, xIsNext, stepNumber } = i;
+   // const { history, xIsNext, stepNumber } = ;
     const action = {
       type: 'NEXT_MOVE',
       history : history.concat([
@@ -37,17 +37,17 @@ class Game extends React.Component {
           ]),
     }
     dispatch(action);
-    this.setState({xIsNext: !this.state.xIsNext, stepNumber: history.length})
+    this.setState({xIsNext: !this.props.xIsNext, stepNumber: history.length})
     
-    // this.setState({
-    //   history: history.concat([
-    //     {
-    //       squares: squares,
-    //     },
-    //   ]),
-    //   stepNumber: history.length,
-    //   xIsNext: !this.state.xIsNext,
-    // });
+    this.setState({
+      history: history.concat([
+        {
+          squares: squares,
+        },
+      ]),
+      stepNumber: history.length,
+      xIsNext: !this.state.xIsNext,
+    });
   }
 
   jumpTo(step) {
@@ -58,8 +58,8 @@ class Game extends React.Component {
   }
 
   render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const history = this.props.history;
+    const current = history[this.props.stepNumber];
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => { 
@@ -75,7 +75,7 @@ class Game extends React.Component {
     if (winner) {
       status = "Winner: " + winner;
     } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      status = "Next player: " + (this.props.xIsNext ? "X" : "O");
     }
 
     return (
@@ -115,6 +115,20 @@ function calculateWinner(squares) {
 }
 
 
-Game = connect()(Game);
+Game.propTypes ={
+  history: PropTypes.array,
+  xIsNext: PropTypes.bool,
+  stepNumber: PropTypes.number,
+};
+
+const mapStateToProps = state => {
+  return {
+    history: state.history,
+    xIsNext: state.xIsNext,
+    stepNumber: state.stepNumber,
+  }
+}
+
+Game = connect(mapStateToProps)(Game);
 
 export default Game;
